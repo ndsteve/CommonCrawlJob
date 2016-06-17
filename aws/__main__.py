@@ -3,8 +3,7 @@ from __future__ import print_function
 import sys
 
 from argparse import ArgumentParser
-
-from . aws import select_crawl, get_index, print_buckets
+from . import S3Remote
 
 
 def command_line():
@@ -53,13 +52,13 @@ def command_line():
 
 
 def main():
+    s3 = S3Remote()
     args = command_line()
-    crawl = select_crawl() if args.date == 'latest' else select_crawl(args.date)
-    print(
-        get_index(crawl),
-        file=(open(args.file, 'wt') if args.file else sys.stdout),
-        end='',
-    )
+    crawl = s3.select_crawl() if args.date == 'latest' else s3.select_crawl(args.date)
+    fp = file=(open(args.file, 'wt') if args.file else sys.stdout)
+    idx = s3.get_index(crawl)
+    for i in idx:
+        print(i)
 
 if __name__ == '__main__':
     sys.exit(main())

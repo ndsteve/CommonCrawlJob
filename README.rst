@@ -127,40 +127,44 @@ Download the latest version of python to send to your EMR instances.
 Create a ``mrjob.conf`` file to set up your configuration parameters to match
 that of AWS.
 
-There is a default configuration template located at ``mrjob.conf.template`` that you can use.
+There is a default configuration template located at ``mrjob.conf.template`` that you can use
+
+
 
 .. code:: yaml
 
     runners:
+      hadoop: # also works for emr runner
+        jobconf:
+          # "true" must be a string argument, not a boolean! (Issue #323)
+          mapreduce.output.fileoutputformat.compress: "true"
+          mapreduce.output.fileoutputformat.compress.codec: org.apache.hadoop.io.compress.GzipCodec
       emr:
-        aws_region: 'us-east-1'
-        aws_access_key_id: <Your AWS_ACCESS_KEY_ID>
-        aws_secret_access_key: <Your AWS_SECRET_ACCESS_KEY>
-        cmdenv:
-            AWS_ACCESS_KEY_ID: <Your AWS_ACCESS_KEY_ID>
-            AWS_SECRET_ACCESS_KEY: <Your AWS_SECRET_ACCESS_KEY>
-        ec2_key_pair: <Path to your PEM file>
-        ec2_key_pair_file: <Name of the Key>
-        ssh_tunnel_to_job_tracker: true
-        ec2_instance_type: 'm1.xlarge'
-        ec2_master_instance_type: 'm1.xlarge'
+        aws_region: 'us-east-1' # IMPORTANT: us-east-1 so you dont pay transfer fees
+        aws_access_key_id: <Required: aws_access_key_id>
+        aws_secret_access_key: <Required: aws_secret_access_key>
+        ec2_key_pair: <Required: EC2 Key Pair Name>
+        ssh_tunnel: true
+        ec2_master_instance_type: 'm3.2xlarge'
+        ec2_core_instance_bid_price: '0.2'
+        ec2_master_instance_bid_price: '0.2'
+        ec2_core_instance_type: 'c3.2xlarge'
         emr_tags:
-            name: '<Your Project Name>'
-        num_ec2_instances: 12
-        ami_version: '2.4.10'
-        python_bin: python2.7
-        interpreter: python2.7
-        bootstrap_action:
-            - s3://elasticmapreduce/bootstrap-actions/install-ganglia
-        upload_files:
-            - CommonCrawl.py
+          name: <Optional: Name Tag>
+          project: <Optional: Project Tag>
+        emr_api_params:
+          VisibleToAllUsers: null
+        strict_protocols: true
+        num_ec2_instances: <Required: Number of Instances>
+        ami_version: '3.11.0'
+        s3_tmp_dir: <Required: S3 Temp Bucket>
+        interpreter: <Required: Interpreter>
         bootstrap:
-            - tar xfz Python-2.7.11.tgz#
-            - cd Python-2.7.11
-            - ./configure && make && sudo make install
-            - sudo python2.7 get-pip.py#
-            - sudo pip2 install --upgrade pip setuptools wheel
-            - sudo pip2 install -r requirements.txt#
+          - sudo rm $(which pip-2.7)
+          - sudo python2.7 get-pip.py#
+          - sudo /usr/local/bin/pip2.7 install --upgrade pip wheel setuptoolps
+          - sudo /usr/local/bin/pip2.7 install --upgrade ujson boto
+          - sudo /usr/local/bin/pip2.7 install -r requirements.txt#
 
 Run on Amazon Elastic MapReduce
 -------------------------------
@@ -172,11 +176,11 @@ information
 
 .. code:: sh
 
-    $ python GoogleAnalytics.py -r emr \
-                                --conf-path="mrjob.conf" \
-                                --output-dir="s3n://$S3_OUTPUT_BUCKET" \
-                               data/arcindex.txt
+    python GoogleAnalytics.py -r emr \
+        --conf-path="mrjob.conf" \
+        --output-dir='s3://your/output/dir' < $(python -m aws)
 
 
 .. _MRJob: https://pythonhosted.org/mrjob/
+
 .. _aws-publicdatasets: https://aws.amazon.com/public-data-sets/
