@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 
+from io import open
 from setuptools import setup, find_packages
 
 setup(
@@ -7,20 +9,25 @@ setup(
     description='Extract data from common crawl using elastic map reduce',
     long_description='\n'.join(
         [
-            open('README.rst', 'rb').read().decode('utf-8'),
+            open('README.rst', encoding='utf-8').read(),
         ]
     ),
     author='Qadium Inc',
     license='Apache Software License v2',
     url='https://github.com/qadium-memex/CommonCrawlJob',
     author_email='sang@qadium.com',
-    include_package_data=True,
     packages=find_packages(exclude=['*tests']),
-    version='0.0.0',
-    zip_safe=False,
+    include_package_data=True,
+    use_2to3=True,
+    zip_safe=True,
+    use_scm_version=True,
+    setup_requires=[
+        'setuptools_scm',
+        "flake8",
+    ],
     entry_points={
         'console_scripts': [
-            'ccjob = ccjob.__main__:main',
+            'crawl_index = aws.__main__:main',
         ]
     },
     classifiers=[

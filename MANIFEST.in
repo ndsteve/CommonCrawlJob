@@ -1,0 +1,3 @@
+recursive-include aws *.py
+recursive-include ccjob *.py
+include LICENSE README.rst mrjob.conf.template requirements.txt

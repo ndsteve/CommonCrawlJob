@@ -1,17 +1,16 @@
 from __future__ import print_function
 
-from .__version__ import __version__, __build__
-from . aws import select_crawl, get_index, print_buckets
-from . redshift import gen_redshift_query
-
 import sys
 
 from argparse import ArgumentParser
 
+from . aws import select_crawl, get_index, print_buckets
+
+
 def command_line():
 
+    prog = 'crawl_index'
     description = 'Helper tool to run MapReduce jobs over Common Crawl'
-    version     = ' '.join([__version__, __build__])
 
     crawl_list = ArgumentParser(add_help=False)
     crawl_list.add_argument(
@@ -28,13 +27,13 @@ def command_line():
 
     parser = ArgumentParser(
         parents=[crawl_list],
-        prog='ccjob',
+        prog=prog,
         description=description,
     )
     parser.add_argument(
         '-v', '--version',
         action='version',
-        version="%s v%s" % ('ccjob', version)
+        version="%s v0.1.0" % prog
     )
     parser.add_argument(
         '-d', '--date',
@@ -52,6 +51,7 @@ def command_line():
     )
     return parser.parse_args()
 
+
 def main():
     args = command_line()
     crawl = select_crawl() if args.date == 'latest' else select_crawl(args.date)
@@ -63,5 +63,3 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(main())
-
-

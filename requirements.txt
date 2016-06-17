@@ -5,3 +5,6 @@ boto3
 sphinx_bootstrap_theme
 sqlalchemy
 psycopg2
+setuptools_scm
+future
+six

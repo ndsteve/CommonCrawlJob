@@ -1,21 +1,17 @@
 import gzip
 import boto
-
+j
 from boto.s3.key import Key
-
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO
+from io import StringIO
 
 __all__ = (
-    'get_crawl',
     'get_index',
     'get_buckets',
     'print_buckets',
 )
 
 DATASET = boto.connect_s3(anon=True).get_bucket('aws-publicdatasets')
+
 
 def get_buckets():
     """
@@ -40,6 +36,7 @@ def get_buckets():
         key.name.encode('utf-8') for key in crawl_bucket if 'CC-MAIN' in key.name
     ]
 
+
 def select_crawl(crawl_date=''):
     """
     Fuzzy match a common crawl crawl prefix from available s3 buckets.
@@ -55,6 +52,7 @@ def select_crawl(crawl_date=''):
     buckets = get_buckets()
     return max([i for i in buckets if crawl_date in i])
 
+
 def get_index(prefix):
     """
     :param prefix: str
@@ -66,6 +64,7 @@ def get_index(prefix):
     botokey = Key(DATASET, prefix + 'warc.paths.gz')
     return gzip.GzipFile(fileobj=StringIO(botokey.read())).read()
 
+
 def print_buckets():
     """
     Helper function to print out list of available buckets
@@ -73,6 +72,5 @@ def print_buckets():
     :return: Nothing is returned
     :rtype: None
     """
-    print('Crawl Date Codes')
     for bucket in get_buckets():
         print(bucket.split('/')[-2].lstrip('CC-MAIN-'))

@@ -1,6 +1,6 @@
 import sys
 import os
-from getpass import getpass
+
 
 def parse_odbc(url):
     """
@@ -28,6 +28,7 @@ def parse_odbc(url):
     assert set(parsed) == set(secrets)
 
     return parsed
+
 
 def gen_redshift_query():
 
