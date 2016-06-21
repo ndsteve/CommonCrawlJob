@@ -52,11 +52,11 @@ def command_line():
 
 
 def main():
-    s3 = S3Remote()
+    remote = S3Remote()
     args = command_line()
-    crawl = s3.select_crawl() if args.date == 'latest' else s3.select_crawl(args.date)
+    crawl = remote.select_crawl() if args.date == 'latest' else remote.select_crawl(args.date)
     fp = open(args.file, 'wt') if args.file else sys.stdout
-    idx = s3.get_index(crawl)
+    idx = remote.get_index(crawl)
     for i in idx:
         print(i, file=fp)
 
