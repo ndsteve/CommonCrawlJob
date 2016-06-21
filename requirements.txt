@@ -1,7 +1,6 @@
 mrjob
 warc
 simplejson
-ujson
 boto3
 sphinx_bootstrap_theme
 setuptools_scm
