@@ -75,3 +75,4 @@ nodes.conf
 
 # Documentation
 docs/_build
+mrjob.conf

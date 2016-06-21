@@ -1,35 +1,48 @@
-from boto.s3.key import Key
-import boto
-
 from mrjob.job import MRJob
 from warc import WARCFile
-from urllib import url2pathname
-
-from . gzipstream import GzipStreamFile
+from six.moves.urllib.request import url2pathname
+from s3fs import S3FileSystem
+import re
 
 __all__ = ['CommonCrawl']
 
 
 class CommonCrawl(MRJob):
 
-    dataset = boto.connect_s3(anon=True).get_bucket('aws-publicdatasets')
+    def configure_options(self):
+        super(CommonCrawl, self).configure_options()
+        self.add_passthrough_option(
+            '--pattern',
+            default='[\"\']UA-(\d+)-(\d)+[\'\"]',
+            type=str,
+            help='pattern',
+        )
 
-    def process_record(self, body):
-        raise NotImplementedError()
+    def mapper_init(self):
+        self.pattern = re.compile(self.options.pattern, re.UNICODE)
+        self.fs = S3FileSystem(anon=True, use_ssl=False)
+
+    def read_warc(self, key):
+        with self.fs.open('/'.join(['aws-publicdatasets', key]), 'rb') as fp:
+            warcfile = WARCFile(fileobj=fp, compress='gzip')
+            for record in warcfile.reader:
+                if record.type == 'response':
+                    yield record
 
     def mapper(self, key, line):
+        for record in self.read_warc(line.strip()):
+            payload = record.payload.read()
+            head, _, tail = payload.partition('\r\n\r\n')
+            for value in self.process(tail):
+                yield ((url2pathname(record.url), value), 1)
 
-        warcfile = WARCFile(fileobj=GzipStreamFile(Key(self.dataset, line)))
-
-        for record in warcfile:
-            if record['Content-Type'] == 'application/http; msgtype=response':
-                payload = record.payload.read()
-                headers, body = payload.split('\r\n\r\n', 1)
-                if 'Content-Type: text/html' in headers:
-                    for value in self.process_record(body):
-                        yield ((url2pathname(record.url), value), 1)
-
-                    self.increment_counter('commoncrawl', 'processed_records', 1)
+    def process(self, body):
+        for match in self.pattern.finditer(body):
+            if match:
+                yield match.groups()[0]
+        self.increment_counter('commoncrawl', 'processed_document', 1)
 
     def reducer(self, url, values):
         yield (url[0], url[1])
+
+
