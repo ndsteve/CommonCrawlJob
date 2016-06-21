@@ -1,10 +1,14 @@
+from __future__ import print_function
+
 from mrjob.job import MRJob
 from warc import WARCFile
 from six.moves.urllib.request import url2pathname
 from s3fs import S3FileSystem
 import re
 
-__all__ = ['CommonCrawl']
+__all__ = [
+    'CommonCrawl'
+]
 
 
 class CommonCrawl(MRJob):
@@ -40,9 +44,8 @@ class CommonCrawl(MRJob):
         for match in self.pattern.finditer(body):
             if match:
                 yield match.groups()[0]
-        self.increment_counter('commoncrawl', 'processed_document', 1)
+        self.increment_counter('commoncrawl', 'processed_record', 1)
 
     def reducer(self, url, values):
         yield (url[0], url[1])
-
 

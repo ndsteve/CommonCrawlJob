@@ -41,27 +41,20 @@ Using a text editor, write to this file
 .. code:: python
 
     import re
-
     from ccjob import CommonCrawl
 
-    class GATagJob(CommonCrawl):
+    class GoogleAnalytics(CommonCrawl):
 
-        def process_record(self, body):
-            # Regular Expression for Google Analytics Tracker
-            pat = re.compile(r"[\"\']UA-(\d+)-(\d)+[\'\"]")
-
-            for match in pat.finditer(body):
-                if match:
-                    yield match.groups()[0]
-
-            self.increment_counter('commoncrawl', 'processed_document', 1)
+        def mapper_init(self):
+            super(GoogleAnalytics, self).mapper_init()
+            self.pattern = re.compile('[\"\']UA-(\d+)-(\d)+[\'\"]', re.UNICODE)
 
 
     if __name__ == '__main__':
-        GATagJob.run()
+        GoogleAnalytics.run()
 
-Our ``GATagJob`` class has one method ``process_record`` taking in one argument containing
-the body of a HTML file and yields the results matching our regular expression.
+Our ``GoogleAnalytics`` class has is overriding one method ``mapper_init`` which defines a compiled regular expressions
+that will be matched over the HTML content.
 
 All common crawl jobs will generally obey this pattern.
 
