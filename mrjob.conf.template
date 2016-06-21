@@ -27,6 +27,6 @@ runners:
         - cd Python-2.7.11
         - ./configure && make && sudo make install
         - sudo python2.7 get-pip.py#
-        - sudo pip2 install --upgrade pip setuptools wheel
+        - sudo pip2 install --upgrade pip setuptools wheel ujson
         - sudo pip2 install -r requirements.txt#
 

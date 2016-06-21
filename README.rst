@@ -1,6 +1,7 @@
 Common Crawl Data Extraction
-============================
-
+===========================
+.. image:: https://travis-ci.org/qadium-memex/CommonCrawlJob.svg?branch=master
+    :target: https://travis-ci.org/qadium-memex/CommonCrawlJob
 Extract data from common crawl using elastic map reduce
 
     Note: This project uses Python 2.7.11
