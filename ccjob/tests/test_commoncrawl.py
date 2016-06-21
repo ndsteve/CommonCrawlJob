@@ -28,6 +28,10 @@ class CommonCrawlTest(TestCase):
     def test_key_exists(self):
         self.assertTrue(self.s3.exists(self.s3_url))
 
+    def test_etag(self):
+        etag = self.s3.info(self.s3_url).get('ETag').strip('"')
+        self.assertEqual(etag, '73e5149d26a4087534674dd7177a7371')
+
     def test_run(self):
         stdin = BytesIO(bytes(self.key))
         mr_job = CommonCrawl(['--no-conf', '-'])
