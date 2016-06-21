@@ -22,6 +22,7 @@ setup(
     url='https://github.com/qadium-memex/CommonCrawlJob',
     author_email='sang@qadium.com',
     packages=find_packages(exclude=['*tests']),
+    test_requires=['nose'],
     include_package_data=True,
     use_2to3=True,
     zip_safe=True,

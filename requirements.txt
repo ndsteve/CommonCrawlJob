@@ -9,3 +9,4 @@ setuptools_scm
 future
 six
 s3fs
+nosetests
