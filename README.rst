@@ -1,7 +1,17 @@
 Common Crawl Data Extraction
-===========================
+============================
+
+.. image:: https://img.shields.io/badge/License-Apache%202.0-blue.svg
+   :target: https://opensource.org/licenses/Apache-2.0
+
 .. image:: https://travis-ci.org/qadium-memex/CommonCrawlJob.svg?branch=master
     :target: https://travis-ci.org/qadium-memex/CommonCrawlJob
+
+.. image:: https://badge.fury.io/py/CommonCrawlJob.svg
+    :target: https://badge.fury.io/py/CommonCrawlJo
+
+
+
 Extract data from common crawl using elastic map reduce
 
     Note: This project uses Python 2.7.11
