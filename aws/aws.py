@@ -1,9 +1,10 @@
 from __future__ import print_function
 
-import gzip
 import boto
 
+from gzip import GzipFile
 from boto.s3.key import Key
+from io import BytesIO
 from builtins import ( # noqa
     bytes, str, open, super, range,
     zip, round, input, int, pow, object
@@ -16,30 +17,23 @@ __all__ = [
 
 class S3Remote(object):
 
-    def __init__(self):
-        self.seg = '/common-crawl/parse-output/valid_segments.txt'
-        self.dataset = boto.connect_s3(
-                anon=True).get_bucket('aws-publicdatasets')
-        self.buckets = self.get_buckets()
-        self.valid_segments, _ = self.get_valid_segments(self.seg)
+    def __init__(self, bucket='aws-publicdatasets'):
+        self.s3 = boto.connect_s3(anon=True, is_secure=False)
+        self.bucket = self.s3.get_bucket(bucket)
 
     def __repr__(self):
-        return '<{} "{}">'.format(
+        return '<{!s} {!r}>'.format(
             self.__class__.__name__,
-            self.dataset.name
+            self.bucket.name
         )
 
-    def get_valid_segments(self, s3_path):
-        kfile = Key(self.dataset, s3_path)
-        try:
-            kfile.open_read()
-        except IOError:
-            raise IOError('S3 %s file not found' % s3_path)
-        meta = dict(kfile.resp.getheaders())
-        data = [i.strip() for i in kfile.read().splitlines()]
-        return data, meta
+    @property
+    def valid_segments(self):
+        kfile = Key(self.bucket, '/common-crawl/parse-output/valid_segments.txt')
+        return [i.strip() for i in kfile.read().splitlines()]
 
-    def get_buckets(self):
+    @property
+    def prefixes(self):
         """
         By default get's the latest crawl prefix.
 
@@ -57,7 +51,7 @@ class S3Remote(object):
         :return: crawl_prefix
         :rtype: str
         """
-        crawl_bucket = self.dataset.list('common-crawl/crawl-data/', '/')
+        crawl_bucket = self.bucket.list('common-crawl/crawl-data/', '/')
         return [
             key.name.encode('utf-8')
             for key in crawl_bucket if 'CC-MAIN' in key.name
@@ -75,7 +69,7 @@ class S3Remote(object):
         :rtype: str
 
         """
-        return max([i for i in self.buckets if crawl_date in i])
+        return max([i for i in self.prefixes if crawl_date in i])
 
     def get_index(self, prefix):
         """
@@ -85,9 +79,9 @@ class S3Remote(object):
         :return: Uncompressed warc index
         :rtype: str
         """
-        botokey = Key(self.dataset, prefix + 'warc.paths.gz')
-        fp = gzip.GzipFile(fileobj=gzip.io.BytesIO(botokey.read()))
-        return [i.strip() for i in fp]
+        crawl = self.select_crawl(prefix)
+        botokey = Key(self.bucket, crawl + 'warc.paths.gz')
+        return [i.strip() for i in GzipFile(fileobj=BytesIO(botokey.read()))]
 
     def print_buckets(self):
         """
@@ -96,6 +90,5 @@ class S3Remote(object):
         :return: Nothing is returned
         :rtype: None
         """
-        print('Crawl Date Codes')
-        for bucket in self.buckets:
-            print(bucket.split('/')[-2].lstrip('CC-MAIN-'))
+        for prefix in self.prefixes:
+            print(prefix.split('/')[-2].lstrip('CC-MAIN-'))

@@ -55,10 +55,10 @@ def main():
     s3 = S3Remote()
     args = command_line()
     crawl = s3.select_crawl() if args.date == 'latest' else s3.select_crawl(args.date)
-    fp = file=(open(args.file, 'wt') if args.file else sys.stdout)
+    fp = open(args.file, 'wt') if args.file else sys.stdout
     idx = s3.get_index(crawl)
     for i in idx:
-        print(i)
+        print(i, file=fp)
 
 if __name__ == '__main__':
     sys.exit(main())

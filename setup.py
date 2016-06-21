@@ -4,6 +4,11 @@ from __future__ import print_function
 from io import open
 from setuptools import setup, find_packages
 
+try:
+   from distutils.command.build_py import build_py_2to3 as build_py
+except ImportError:
+   from distutils.command.build_py import build_py
+
 setup(
     name='CommonCrawlJob',
     description='Extract data from common crawl using elastic map reduce',
@@ -25,11 +30,13 @@ setup(
         'setuptools_scm',
         "flake8",
     ],
+    install_requires=['warc'],
     entry_points={
         'console_scripts': [
             'crawl_index = aws.__main__:main',
         ]
     },
+   cmdclass = {'build_py': build_py},
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Console',
