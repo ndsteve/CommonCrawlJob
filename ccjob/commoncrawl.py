@@ -27,7 +27,8 @@ class CommonCrawl(MRJob):
         self.fs = S3FileSystem(anon=True, use_ssl=False)
 
     def read_warc(self, key):
-        with self.fs.open('/'.join(['aws-publicdatasets', key]), 'rb') as fp:
+        keypath = 's3://aws-publicdatasets/{key}'.format(key=key)
+        with self.fs.open(keypath, 'rb') as fp:
             warcfile = WARCFile(fileobj=fp, compress='gzip')
             for record in warcfile.reader:
                 if record.type == 'response':
