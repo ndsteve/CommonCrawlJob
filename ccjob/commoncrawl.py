@@ -75,6 +75,7 @@ class CommonCrawl(MRJob):
         with self.fs.open(keypath, 'rb') as fp:
             warcfile = WARCFile(fileobj=fp, compress='gzip')
             for record in warcfile.reader:
+                self.increment_counter('commoncrawl', 'processed_record', 1)
                 if record.type == 'response':
                     yield record
 
@@ -88,7 +89,6 @@ class CommonCrawl(MRJob):
         for match in self.pattern.finditer(body):
             if match:
                 yield match.groups()[0]
-        self.increment_counter('commoncrawl', 'processed_record', 1)
 
     def reducer(self, url, values):
         yield (url[0], url[1])
