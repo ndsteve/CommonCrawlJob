@@ -7,22 +7,55 @@ from s3fs import S3FileSystem
 
 import re
 
+from . structures import CaseInsensitiveDict
+
 __all__ = [
     'CommonCrawl'
 ]
 
 
 class CommonCrawl(MRJob):
+    """
+    Baseclass for CommonCrawl MRJob Task.
 
+    Can be inherited from, or used directly by overriding `self.pattern` regular expression
+    pattern or through manipulation of the inherited MRJob parent class.
+
+    Usage::
+
+    .. code:: python
+
+        class GoogleAnalytics(CommonCrawl):
+
+            def mapper_init(self):
+                super(GoogleAnalytics, self).mapper_init()
+                self.pattern = re.compile('[\"\']UA-(\d+)-(\d)+[\'\"]', re.UNICODE)
+
+
+        if __name__ == '__main__':
+            GoogleAnalytics.run()
+    """
     @staticmethod
     def split_headers(head):
-        return dict([i.split(':', 1) for i in head.splitlines() if ':' in i])
+        return CaseInsensitiveDict(
+            [
+                k.strip() for k in i.split(':', 1)
+                ] for i in head.splitlines() if ':' in i
+        )
 
     def get_payload(self, record):
-        output = {}
+        encoding = None
         payload = record.payload.read()
         head, _, tail = payload.partition('\r\n\r\n')
-        output.update(self.split_headers(head))
+        content_type = self.split_headers(head).get('content-type', '').lower()
+        if 'utf-8' or 'utf8' in content_type:
+            encoding = 'utf-8'
+        elif 'latin-1' or 'iso-8859-1' in content_type:
+            encoding = 'latin-1'
+        try:
+            return tail.decode(encoding)
+        except UnicodeDecodeError:
+            return ''
 
     def configure_options(self):
         super(CommonCrawl, self).configure_options()
@@ -48,7 +81,7 @@ class CommonCrawl(MRJob):
     def mapper(self, key, line):
         for record in self.read_warc(line.strip()):
             payload = self.get_payload(record)
-            for value in self.process_record(payload.get('tail', '')):
+            for value in self.process_record(payload):
                 yield ((url2pathname(record.url), value), 1)
 
     def process_record(self, body):
