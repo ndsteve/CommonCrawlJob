@@ -4,6 +4,7 @@ from mrjob.job import MRJob
 from warc import WARCFile
 from six.moves.urllib.request import url2pathname
 from s3fs import S3FileSystem
+
 import re
 
 __all__ = [
@@ -12,6 +13,16 @@ __all__ = [
 
 
 class CommonCrawl(MRJob):
+
+    @staticmethod
+    def split_headers(head):
+        return dict([i.split(':', 1) for i in head.splitlines() if ':' in i])
+
+    def get_payload(self, record):
+        output = {}
+        payload = record.payload.read()
+        head, _, tail = payload.partition('\r\n\r\n')
+        output.update(self.split_headers(head))
 
     def configure_options(self):
         super(CommonCrawl, self).configure_options()
@@ -23,7 +34,7 @@ class CommonCrawl(MRJob):
         )
 
     def mapper_init(self):
-        self.pattern = re.compile(self.options.pattern, re.UNICODE)
+        self.pattern = re.compile(self.options.pattern)
         self.fs = S3FileSystem(anon=True, use_ssl=False)
 
     def read_warc(self, key):
@@ -36,12 +47,11 @@ class CommonCrawl(MRJob):
 
     def mapper(self, key, line):
         for record in self.read_warc(line.strip()):
-            payload = record.payload.read()
-            head, _, tail = payload.partition('\r\n\r\n')
-            for value in self.process(tail):
+            payload = self.get_payload(record)
+            for value in self.process_record(payload.get('tail', '')):
                 yield ((url2pathname(record.url), value), 1)
 
-    def process(self, body):
+    def process_record(self, body):
         for match in self.pattern.finditer(body):
             if match:
                 yield match.groups()[0]

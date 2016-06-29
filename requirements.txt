@@ -8,3 +8,4 @@ future
 six
 s3fs
 nose
+chardet
