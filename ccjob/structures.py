@@ -28,6 +28,7 @@ class CaseInsensitiveDict(MutableMapping):
     If the constructor, ``.update``, or equality comparison
     operations are given keys that have equal ``.lower()``s, the
     behavior is undefined.
+
     """
     def __init__(self, data=None, **kwargs):
         self._store = OrderedDict()
