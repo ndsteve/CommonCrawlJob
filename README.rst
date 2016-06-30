@@ -104,9 +104,6 @@ To create an Amazon EC2 key pair:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. image:: ./static/img/EC2KeyPair.png
-   :height: 100px
-   :width: 200 px
-   :scale: 50 %
    :alt: EC2 Key Pair
    :align: center
 
