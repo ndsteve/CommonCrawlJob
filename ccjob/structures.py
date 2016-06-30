@@ -7,7 +7,7 @@ class CaseInsensitiveDict(MutableMapping):
     A case-insensitive ``dict``-like object.
 
     Implements all methods and operations of
-    ``collections.MutableMapping`` as well as dict's ``copy``. Also
+    ``MutableMapping`` as well as dict's ``copy``. Also
     provides ``lower_items``.
 
     All keys are expected to be strings. The structure remembers the
@@ -28,7 +28,6 @@ class CaseInsensitiveDict(MutableMapping):
     If the constructor, ``.update``, or equality comparison
     operations are given keys that have equal ``.lower()``s, the
     behavior is undefined.
-
     """
     def __init__(self, data=None, **kwargs):
         self._store = OrderedDict()
