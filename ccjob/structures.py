@@ -31,7 +31,7 @@ class CaseInsensitiveDict(MutableMapping):
 
     """
     def __init__(self, data=None, **kwargs):
-        self._store = OrderedDict()
+        self._d = OrderedDict()
         if data is None:
             data = {}
         self.update(data, **kwargs)
@@ -42,25 +42,19 @@ class CaseInsensitiveDict(MutableMapping):
     def __setitem__(self, key, value):
         # Use the lowercased key for lookups, but store the actual
         # key alongside the value.
-        self._store[key.lower()] = (key, value)
+        self._d[key.lower()] = (key, value)
 
     def __getitem__(self, key):
-        return self._store[key.lower()][1]
+        return self._d[key.lower()][1]
 
     def __delitem__(self, key):
-        del self._store[key.lower()]
+        del self._d[key.lower()]
 
     def __iter__(self):
-        return (casedkey for casedkey, mappedvalue in self._store.values())
+        return (k for k, v in self._d.values())
 
     def __len__(self):
-        return len(self._store)
-
-    def lower_items(self):
-        """
-        Like iteritems(), but with all lowercase keys
-        """
-        return ((lowerkey, keyval[1]) for (lowerkey, keyval) in self._store.items())
+        return len(self._d)
 
     def __eq__(self, other):
         if isinstance(other, Mapping):
@@ -72,4 +66,11 @@ class CaseInsensitiveDict(MutableMapping):
 
     # Copy is required
     def copy(self):
-        return CaseInsensitiveDict(self._store.values())
+        return CaseInsensitiveDict(self._d.values())
+
+    def lower_items(self):
+        """
+        Like iteritems(), but with all lowercase keys
+        """
+        return ((k, v[1]) for (k, v) in self._d.items())
+
