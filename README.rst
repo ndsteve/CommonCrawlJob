@@ -14,7 +14,16 @@ Common Crawl Data Extraction
 
 Extract data from common crawl using elastic map reduce
 
-    Note: This project uses Python 2.7.11
+Support
+-------
+
+Here’s a list of Python platforms that are officially supported.
+
+-  Python 2.7
+-  Python 2.6
+-  PyPy 2 (Latest)
+
+| Python 3 Support on the Way!
 
 CommonCrawlJob is a framework which wraps the ``MRJob`` hadoop library for streaming
 analytics over internet scale data.
