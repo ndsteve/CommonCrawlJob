@@ -20,7 +20,6 @@ Support
 Here’s a list of Python platforms that are officially supported.
 
 -  Python 2.7
--  Python 2.6
 -  PyPy 2 (Latest)
 
 | Python 3 Support on the Way!
