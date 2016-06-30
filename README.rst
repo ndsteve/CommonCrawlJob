@@ -103,7 +103,12 @@ The PEM file associated with this key pair is required to ssh directly to the ma
 To create an Amazon EC2 key pair:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-![EC2KeyPair](static/img/EC2KeyPair.png)
+.. image:: ./static/img/EC2KeyPair.png
+   :height: 100px
+   :width: 200 px
+   :scale: 50 %
+   :alt: EC2 Key Pair
+   :align: center
 
 1. Go to the Amazon EC2 console
 2. In the Navigation pane, click Key Pairs
