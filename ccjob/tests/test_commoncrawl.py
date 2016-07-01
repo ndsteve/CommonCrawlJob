@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from unittest import TestCase
+from future.builtins import bytes
 from io import BytesIO
 
 from s3fs import S3FileSystem
@@ -33,7 +34,7 @@ class CommonCrawlTest(TestCase):
         self.assertEqual(etag, '73e5149d26a4087534674dd7177a7371')
 
     def test_run(self):
-        stdin = BytesIO(bytes(self.key))
+        stdin = BytesIO(bytes(self.key, 'utf-8'))
         mr_job = CommonCrawl(['--no-conf', '-'])
         mr_job.sandbox(stdin=stdin)
         with mr_job.make_runner() as runner:
