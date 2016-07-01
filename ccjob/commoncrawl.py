@@ -44,18 +44,15 @@ class CommonCrawl(MRJob):
         )
 
     def get_payload(self, record):
-        encoding = None
         payload = record.payload.read()
         head, _, tail = payload.partition('\r\n\r\n')
         content_type = self.split_headers(head).get('content-type', '').lower()
-        if 'utf-8' or 'utf8' in content_type:
-            encoding = 'utf-8'
-        elif 'latin-1' or 'iso-8859-1' in content_type:
-            encoding = 'latin-1'
+        if 'latin-1' or 'iso-8859-1' in content_type:
+            tail = tail.decode('latin-1').encode('utf-8')
         try:
-            return tail.decode(encoding)
+            return tail.decode('utf-8')
         except UnicodeDecodeError:
-            return ''
+            return unicode()
 
     def configure_options(self):
         super(CommonCrawl, self).configure_options()
