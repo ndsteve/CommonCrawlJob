@@ -1,5 +1,4 @@
 mrjob
-warc
 simplejson
 boto3
 sphinx_bootstrap_theme
@@ -8,4 +7,4 @@ future
 six
 s3fs
 nose
-chardet
+-e git+https://github.com/qadium-memex/warc#egg=warc
