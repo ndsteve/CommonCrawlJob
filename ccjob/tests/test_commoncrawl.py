@@ -2,6 +2,7 @@
 
 from unittest import TestCase
 from future.builtins import bytes
+from io import BytesIO
 from s3fs import S3FileSystem
 from ccjob import CommonCrawl
 from warc import WARCFile
@@ -32,15 +33,12 @@ class CommonCrawlTest(TestCase):
         etag = self.s3.info(self.s3_url).get('ETag').strip('"')
         self.assertEqual(etag, '73e5149d26a4087534674dd7177a7371')
 
-    def gen_record(self):
-        with self.s3.open(self.s3_url, 'rb') as fp:
-            warcfile = WARCFile(fileobj=fp, compress='gzip')
-            for record in warcfile.reader:
-                if record.type == 'response':
-                    yield record
-
-    def test_records(self):
-        crawl_job = CommonCrawl()
-        for record in self.gen_record():
-            if record.type == 'response':
-                self.assertTrue(True)
+    def test_run(self):
+        stdin = BytesIO(bytes(self.key))
+        mr_job = CommonCrawl(['--no-conf', '-'])
+        mr_job.sandbox(stdin=stdin)
+        with mr_job.make_runner() as runner:
+            runner.run()
+            for line in runner.stream_output():
+                key, value = mr_job.parse_output_line(line)
+                self.assertTrue(value.isdigit())
