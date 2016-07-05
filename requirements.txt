@@ -7,4 +7,4 @@ future
 six
 s3fs
 nose
--e git+https://github.com/qadium-memex/warc#egg=warc
+warc
