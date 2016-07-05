@@ -2,14 +2,11 @@
 
 from unittest import TestCase
 from future.builtins import bytes
-from io import BytesIO, StringIO, TextIOWrapper
-
 from s3fs import S3FileSystem
 from ccjob import CommonCrawl
+from warc import WARCFile
 
 import logging
-import tempfile
-import sys
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +33,7 @@ class CommonCrawlTest(TestCase):
         self.assertEqual(etag, '73e5149d26a4087534674dd7177a7371')
 
     def gen_record(self):
-        with fs.open(self.s3_url, 'rb') as fp:
+        with self.s3.open(self.s3_url, 'rb') as fp:
             warcfile = WARCFile(fileobj=fp, compress='gzip')
             for record in warcfile.reader:
                 if record.type == 'response':
