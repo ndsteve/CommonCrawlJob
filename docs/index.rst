@@ -14,7 +14,7 @@ Common Crawl Job Library
     :maxdepth: 3
 
     README.rst
-    example.rst
+    examples/README.rst
 
 Indices and tables
 ==================
