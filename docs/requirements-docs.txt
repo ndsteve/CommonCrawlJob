@@ -1,0 +1,2 @@
+nbsphinx
+isphinx_rtd_theme

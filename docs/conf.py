@@ -13,8 +13,11 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys
 import os
+import sys
+
+import ccjob
+from ccjob import __build__, __release__, __title__, __version__
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -27,10 +30,6 @@ if not _rtd:
     import sphinx_rtd_theme
     html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
     html_theme = 'sphinx_rtd_theme'
-
-import ccjob
-
-from ccjob import __version__, __build__, __release__, __title__
 
 # -- General configuration ------------------------------------------------
 
@@ -60,7 +59,13 @@ language = None
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build']
+extensions = [
+    'nbsphinx',
+    'sphinx.ext.mathjax',
+    'sphinx.ext.autodoc',
+
+]
+exclude_patterns = ['_build', '**.ipynb_checkpoints']
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -88,7 +93,6 @@ pygments_style = 'sphinx'
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
-
 
 # -- Options for HTML output ----------------------------------------------
 
@@ -186,19 +190,19 @@ html_static_path = ['_static']
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'Common Crawl Job Library'
 
-# -- Options for LaTeX output --------------------------------------------- 
+# -- Options for LaTeX output ---------------------------------------------
 latex_elements = {
-# The paper size ('letterpaper' or 'a4paper').
-#'papersize': 'letterpaper',
+    # The paper size ('letterpaper' or 'a4paper').
+    #'papersize': 'letterpaper',
 
-# The font size ('10pt', '11pt' or '12pt').
-#'pointsize': '10pt',
+    # The font size ('10pt', '11pt' or '12pt').
+    #'pointsize': '10pt',
 
-# Additional stuff for the LaTeX preamble.
-#'preamble': '',
+    # Additional stuff for the LaTeX preamble.
+    #'preamble': '',
 
-# Latex figure (float) alignment
-#'figure_align': 'htbp',
+    # Latex figure (float) alignment
+    #'figure_align': 'htbp',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
@@ -229,19 +233,16 @@ latex_documents = [
 # If false, no module index is generated.
 #latex_domain_indices = True
 
-
 # -- Options for manual page output ---------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'commoncrawljob', 'CommonCrawlJob Documentation',
-     [author], 1)
+    (master_doc, 'commoncrawljob', 'CommonCrawlJob Documentation', [author], 1)
 ]
 
 # If true, show URL addresses after external links.
 #man_show_urls = False
-
 
 # -- Options for Texinfo output -------------------------------------------
 
@@ -249,9 +250,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'CommonCrawlJob', 'CommonCrawlJob Documentation',
-     author, 'CommonCrawlJob', 'One line description of project.',
-     'Miscellaneous'),
+    (master_doc, 'CommonCrawlJob', 'CommonCrawlJob Documentation', author,
+     'CommonCrawlJob', 'One line description of project.', 'Miscellaneous'),
 ]
 
 # Documents to append as an appendix to all manuals.
@@ -265,7 +265,6 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
-
 
 # -- Options for Epub output ----------------------------------------------
 
@@ -335,7 +334,6 @@ epub_exclude_files = ['search.html']
 
 # If false, no index is generated.
 #epub_use_index = True
-
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'https://docs.python.org/': None}

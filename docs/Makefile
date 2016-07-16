@@ -47,12 +47,18 @@ help:
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 	@echo "  coverage   to run coverage check of the documentation (if enabled)"
 
+README.rst:
+	cd .. && ln -s ../README.rst docs/README.rst
+
+$(BUILDDIR)/html/static/:
+	touch $@
+
 .PHONY: clean
 clean:
 	rm -rf $(BUILDDIR)/*
 
 .PHONY: html
-html:
+html: README.rst
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."

@@ -1,27 +1,20 @@
-.. :index:
+.. Common Crawl Job Library Documentatio Index
 
-========================
 Common Crawl Job Library
 ========================
-**A MRJob library for running mapreduce over Common Crawl**
 
--------------------
+`CommonCrawlJob` is a small module for simplifying common mapreduce workflows over Common Crawl
 
-:Author: Qadium Inc
-:Project: DARPA Memex
-:License: `Apache Software License v2 <http://opensource.org/licenses/Apache-2.0>`_
-:Version: v\ |version| |release|
+:Author: `Sang Han`_
+:License: `Apache Software License v2`_
+:Code: `Github Codebase`_
+:Release: v\ |version| |release|
 
-Quickstart Guide
-----------------
 .. toctree::
     :maxdepth: 3
 
     README.rst
-
-.. toctree::
-   :maxdepth: 2
-
+    example.rst
 
 Indices and tables
 ==================
@@ -30,3 +23,6 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
+.. _`Apache Software License v2`: http://opensource.org/licenses/Apache-2.0
+.. _`Github Codebase`: https://github.com/qadium-memex/CommonCrawlJob
+.. _`Sang Han`: sang@qadium.com
