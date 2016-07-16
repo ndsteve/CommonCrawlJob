@@ -15,7 +15,7 @@ We will go from start to finish in creating a Common Crawl extractor that uses r
 google analytics tracker id's.
 
 .. literalinclude:: GoogleAnalytics.py
-    :language: python
+   :language: python
 
 Our ``GoogleAnalytics`` class has is overriding one method ``mapper_init`` which defines a compiled regular expressions
 that will be matched over the HTML content.
@@ -23,14 +23,13 @@ that will be matched over the HTML content.
 All common crawl jobs will generally obey this pattern.
 
 Running Locally
-===============
+---------------
 
 Run the Google Analytics extractor locally to test your script.
 
 .. code-block:: sh
 
     $ python GoogleAnalytics.py -r local <(tail -n 1 data/latest.txt)
-
 
 Configuration
 =============
@@ -54,7 +53,7 @@ to ensure that you alone have access to the instances that you launch.
 The PEM file associated with this key pair is required to ssh directly to the master node of the cluster.
 
 To create an Amazon EC2 key pair:
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------
 
 .. image:: /static/img/EC2KeyPair.png
    :alt: EC2 Key Pair
@@ -92,6 +91,7 @@ that of AWS.
 There is a default configuration template located at ``mrjob.conf.template`` that you can use
 
 .. literalinclude:: mrjob.conf.template
+   :language: yaml
 
 Deploy on EMR
 =============
