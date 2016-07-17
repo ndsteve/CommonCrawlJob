@@ -1,32 +1,42 @@
+# A config file template to build off for running in production
+#
+# If you don't have the yaml module installed, you'll have to use JSON instead,
+# which would look something like this:
+
 runners:
   emr:
+    # Wer run on `us-east-1`
+    # This ensure colocation with the CommonCrawl s3 bucket
     aws_region: 'us-east-1'
     aws_access_key_id: <Your AWS_ACCESS_KEY_ID>
     aws_secret_access_key: <Your AWS_SECRET_ACCESS_KEY>
-    cmdenv:
-        AWS_ACCESS_KEY_ID: <Your AWS_ACCESS_KEY_ID>
-        AWS_SECRET_ACCESS_KEY: <Your AWS_SECRET_ACCESS_KEY>
-    ec2_key_pair: <Path to your PEM file>
-    ec2_key_pair_file: <Name of the Key>
-    ssh_tunnel_to_job_tracker: true
+    ec2_key_pair: <Name of the Key>
+    ec2_key_pair_file: <Path to your PEM file>
+    ssh_tunnel: true
+    ssh_tunnel_is_open: true
+
+    # Remember to change to a more beefier in production
+    num_ec2_instances: 1
     ec2_instance_type: 'm1.xlarge'
     ec2_master_instance_type: 'm1.xlarge'
-    emr_tags:
-        project: <Your Project>
-        name: <Project Name>
-    num_ec2_instances: 12
-    ami_version: '2.4.10'
+
+    # Getting the right ami_version is important to get right.
+    # https://pythonhosted.org/mrjob/guides/emr-bootstrap-cookbook.html#installing-system-packages
+    ami_version: '3.11.0'
     python_bin: python2.7
     interpreter: python2.7
+
+    # These are functionally optional but realistically are not
+    emr_tags:
+        project: <Optional: Your Project>
+        name: <Optional: Project Name>
+
     bootstrap_action:
         - s3://elasticmapreduce/bootstrap-actions/install-ganglia
     upload_files:
-        - CommonCrawl.py
+        - examples/GoogleAnalytics.py
     bootstrap:
-        - tar xfz Python-2.7.11.tgz#
-        - cd Python-2.7.11
-        - ./configure && make && sudo make install
-        - sudo python2.7 get-pip.py#
-        - sudo pip2 install --upgrade pip setuptools wheel ujson
-        - sudo pip2 install -r requirements.txt#
+        # Get the most current versions of packaging libraries
+        - sudo pip-2.7 install ujson setuptools wheel pip
+        - sudo pip-2.7 install -r requirements.txt#
 

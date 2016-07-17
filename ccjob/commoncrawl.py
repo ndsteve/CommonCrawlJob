@@ -13,7 +13,6 @@ __all__ = [
     'CommonCrawl'
 ]
 
-
 class CommonCrawl(MRJob):
     """
     Baseclass for CommonCrawl MRJob Task.
@@ -31,10 +30,14 @@ class CommonCrawl(MRJob):
                 super(GoogleAnalytics, self).mapper_init()
                 self.pattern = re.compile('[\"\']UA-(\d+)-(\d)+[\'\"]', re.UNICODE)
 
-
         if __name__ == '__main__':
             GoogleAnalytics.run()
     """
+    fs = S3FileSystem(anon=True)
+
+    def __repr__(self):
+        return '<{}: {}>'.format(self.__class__.__name__,self.stdin)
+
     @staticmethod
     def split_headers(head):
         return CaseInsensitiveDict(
@@ -53,19 +56,6 @@ class CommonCrawl(MRJob):
             return tail.decode('utf-8')
         except UnicodeDecodeError:
             return unicode()
-
-    def configure_options(self):
-        super(CommonCrawl, self).configure_options()
-        self.add_passthrough_option(
-            '--pattern',
-            default='[\"\']UA-(\d+)-(\d)+[\'\"]',
-            type=str,
-            help='pattern',
-        )
-
-    def mapper_init(self):
-        self.pattern = re.compile(self.options.pattern)
-        self.fs = S3FileSystem(anon=True, use_ssl=False)
 
     def read_warc(self, key):
         keypath = 's3://aws-publicdatasets/{key}'.format(key=key)
