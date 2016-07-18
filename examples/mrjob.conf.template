@@ -28,13 +28,15 @@ runners:
 
     # These are functionally optional but realistically are not
     emr_tags:
-        project: <Optional: Your Project>
-        name: <Optional: Project Name>
+        project: <Optional Your Project>
+        name: <Optional Project Name>
 
     bootstrap_action:
         - s3://elasticmapreduce/bootstrap-actions/install-ganglia
+
     upload_files:
         - examples/GoogleAnalytics.py
+
     bootstrap:
         # Get the most current versions of packaging libraries
         - sudo pip-2.7 install ujson setuptools wheel pip

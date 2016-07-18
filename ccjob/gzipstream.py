@@ -1,3 +1,12 @@
+"""
+The gzip module in python works with files.
+
+It does not have an interface for decompressing a stream of data.
+
+The gzip module in Python 3.2 has been fixed, but will not
+be backported to earlier versions of Python.
+"""
+
 import io
 import zlib
 

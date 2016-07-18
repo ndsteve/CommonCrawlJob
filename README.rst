@@ -39,9 +39,5 @@ Unfortunately the library for encoding ``WARC (Web Archive)`` file formats
 will need to undergo a rewrite it is possible to have deterministic IO behavior.
 
 .. _MRJob: https://pythonhosted.org/mrjob/
-
-.. _aws-publicdatasets: https://aws.amazon.com/public-data-sets/
-
-
 .. _`Qadium Inc`: https://qadium.com
 .. _`Darpa Memex Program`: www.darpa.mil/program/memex

@@ -5,8 +5,6 @@ from warc import WARCFile
 from six.moves.urllib.request import url2pathname
 from s3fs import S3FileSystem
 
-import re
-
 from . structures import CaseInsensitiveDict
 
 __all__ = [
@@ -33,7 +31,7 @@ class CommonCrawl(MRJob):
         if __name__ == '__main__':
             GoogleAnalytics.run()
     """
-    fs = S3FileSystem(anon=True)
+    s3 = S3FileSystem(anon=True)
 
     def __repr__(self):
         return '<{}: {}>'.format(self.__class__.__name__,self.stdin)
@@ -43,7 +41,7 @@ class CommonCrawl(MRJob):
         return CaseInsensitiveDict(
             [
                 k.strip() for k in i.split(':', 1)
-                ] for i in head.splitlines() if ':' in i
+            ] for i in head.splitlines() if ':' in i
         )
 
     def get_payload(self, record):
@@ -59,7 +57,7 @@ class CommonCrawl(MRJob):
 
     def read_warc(self, key):
         keypath = 's3://aws-publicdatasets/{key}'.format(key=key)
-        with self.fs.open(keypath, 'rb') as fp:
+        with self.s3.open(keypath, 'rb') as fp:
             warcfile = WARCFile(fileobj=fp, compress='gzip')
             for record in warcfile.reader:
                 self.increment_counter('commoncrawl', 'processed_record', 1)

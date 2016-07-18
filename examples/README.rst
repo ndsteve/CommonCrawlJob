@@ -106,3 +106,5 @@ information
     python GoogleAnalytics.py -r emr \
         --conf-path="mrjob.conf" \
         --output-dir='s3://your/output/dir' < $(python -m aws)
+
+.. _aws-publicdatasets: https://aws.amazon.com/public-data-sets/

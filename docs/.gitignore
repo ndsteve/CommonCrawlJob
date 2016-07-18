@@ -1,1 +1,3 @@
-README.rst
+_build/
+_static/
+examples/*.txt
