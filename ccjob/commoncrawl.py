@@ -1,5 +1,7 @@
 from __future__ import print_function
 
+import re
+
 from mrjob.job import MRJob
 from warc import WARCFile
 from six.moves.urllib.request import url2pathname
@@ -32,6 +34,10 @@ class CommonCrawl(MRJob):
             GoogleAnalytics.run()
     """
     s3 = S3FileSystem(anon=True)
+
+    def __init__(self, *args, **kwargs):
+        super(CommonCrawl, self).__init__(*args, **kwargs)
+        self.pattern = re.compile('[\"\']UA-(\d+)-(\d)+[\'\"]')
 
     def __repr__(self):
         return '<{}: {}>'.format(self.__class__.__name__,self.stdin)
