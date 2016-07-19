@@ -35,12 +35,19 @@ class CommonCrawl(MRJob):
     """
     s3 = S3FileSystem(anon=True)
 
-    def __init__(self, *args, **kwargs):
-        super(CommonCrawl, self).__init__(*args, **kwargs)
-        self.pattern = re.compile('[\"\']UA-(\d+)-(\d)+[\'\"]')
-
     def __repr__(self):
-        return '<{}: {}>'.format(self.__class__.__name__,self.stdin)
+        return '<{}: {}>'.format(self.__class__.__name__, self.stdin)
+
+    def configure_options(self):
+        super(CommonCrawl, self).configure_options()
+        self.add_passthrough_option(
+            '--pattern',
+            default='[\"\']UA-(\d+)-(\d)+[\'\"]',
+            type=str,
+            help='pattern',
+        )
+    def mapper_init(self):
+        self.pattern = re.compile(self.options.pattern)
 
     @staticmethod
     def split_headers(head):

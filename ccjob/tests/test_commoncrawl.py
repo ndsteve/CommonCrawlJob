@@ -5,7 +5,6 @@ from future.builtins import bytes
 from io import BytesIO
 from s3fs import S3FileSystem
 from ccjob import CommonCrawl
-from warc import WARCFile
 
 import logging
 
