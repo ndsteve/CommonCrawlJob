@@ -46,7 +46,7 @@ class CommonCrawl(MRJob):
             '--pattern',
             default='[\"\']UA-(\d+)-(\d)+[\'\"]',
             type=str,
-            help='pattern',
+            help='Regex pattern input as a command line argument',
         )
     def mapper_init(self):
         self.pattern = re.compile(self.options.pattern)
@@ -75,8 +75,8 @@ class CommonCrawl(MRJob):
         with self.s3.open(keypath, 'rb') as fp:
             warcfile = WARCFile(fileobj=fp, compress='gzip')
             for record in warcfile.reader:
-                self.increment_counter('commoncrawl', 'processed_record', 1)
                 if record.type == 'response':
+                    self.increment_counter(self.__class__.__name__, 'match', 1)
                     yield record
 
     def mapper(self, key, line):

@@ -32,12 +32,9 @@ class CommonCrawlTest(TestCase):
         etag = self.s3.info(self.s3_url).get('ETag').strip('"')
         self.assertEqual(etag, '73e5149d26a4087534674dd7177a7371')
 
-    def test_run(self):
-        stdin = BytesIO(bytes(self.key))
-        common_crawl = CommonCrawl(['--no-conf', '-'])
-        common_crawl.sandbox(stdin=stdin)
-        with common_crawl.make_runner() as runner:
-            runner.run()
-            for line in runner.stream_output():
-                key, value = common_crawl.parse_output_line(line)
-                self.assertTrue(value.isdigit())
+    def test_mapper(self):
+        common_crawl = CommonCrawl()
+        common_crawl.mapper_init()
+        common_crawl.stderr = BytesIO()
+        for (key, value), _ in common_crawl.mapper(None, self.key):
+            self.assertTrue(value.isdigit())
