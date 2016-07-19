@@ -15,7 +15,7 @@ __all__ = [
 
 class CommonCrawl(MRJob):
     """
-    Baseclass for CommonCrawl MRJob Task.
+    Concrete Base class for CommonCrawl MRJob Task.
 
     Can be inherited from, or used directly by overriding `self.pattern` regular expression
     pattern or through manipulation of the inherited MRJob parent class.
@@ -27,8 +27,7 @@ class CommonCrawl(MRJob):
         class GoogleAnalytics(CommonCrawl):
 
             def mapper_init(self):
-                super(GoogleAnalytics, self).mapper_init()
-                self.pattern = re.compile('[\"\']UA-(\d+)-(\d)+[\'\"]', re.UNICODE)
+                self.pattern = re.compile('[\"\']UA-(\d+)-(\d)+[\'\"]')
 
         if __name__ == '__main__':
             GoogleAnalytics.run()
@@ -36,7 +35,10 @@ class CommonCrawl(MRJob):
     s3 = S3FileSystem(anon=True)
 
     def __repr__(self):
-        return '<{}: {}>'.format(self.__class__.__name__, self.stdin)
+        return '<{clsname}: {stdin}>'.format(
+            clsname=self.__class__.__name__,
+            stdin=self.stdin,
+        )
 
     def configure_options(self):
         super(CommonCrawl, self).configure_options()

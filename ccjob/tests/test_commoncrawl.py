@@ -34,10 +34,10 @@ class CommonCrawlTest(TestCase):
 
     def test_run(self):
         stdin = BytesIO(bytes(self.key))
-        mr_job = CommonCrawl(['--no-conf', '-'])
-        mr_job.sandbox(stdin=stdin)
-        with mr_job.make_runner() as runner:
+        common_crawl = CommonCrawl(['--no-conf', '-'])
+        common_crawl.sandbox(stdin=stdin)
+        with common_crawl.make_runner() as runner:
             runner.run()
             for line in runner.stream_output():
-                key, value = mr_job.parse_output_line(line)
+                key, value = common_crawl.parse_output_line(line)
                 self.assertTrue(value.isdigit())
