@@ -488,7 +488,7 @@ Now that EMR is terminated, navigate back to your hadoop home directory and ente
 
 	sbin/stop-yarn.sh
 
-You have now successfully ran your first EMR job over the Common Crawl Archive!
+You have now successfully ran your first EMR job over part of the Common Crawl Archive!
 
 Next Steps
 ----------
