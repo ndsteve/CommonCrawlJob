@@ -492,6 +492,6 @@ You have now successfully ran your first EMR job over part of the Common Crawl A
 
 Next Steps
 ----------
-When ready, run the above command over every URL inside of the original ``data/latest.txt`` file.   Proceed with caution as this could take a while and be costly ... continue at your own risk ;)
+When ready, run the above command over every URL inside of the original ``data/latest.txt`` file.   This will run ``GoogleAnalytics.py`` over the ENTIRE Common Crawl July 2016 archive.  
 
-Congrats - you've just crawled over the whole internet! :)
+Proceed with caution as this is a bigger EMR job and could be costly ... continue at your own risk ;)  Best of luck!!
