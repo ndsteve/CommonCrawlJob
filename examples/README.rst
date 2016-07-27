@@ -186,7 +186,7 @@ Click, "upload" inside of the new bucket you have created and upload your requir
 Configuring your own environment
 --------------------------------
 For best performance, you should launch the cluster in the same region
-as your data. Currently data from ``aws-publicdatasets``_ are stored in
+as your data. Currently data from ``aws-publicdatasets`` are stored in
 ``us-east-1``, which is where you want to point your EMR cluster.
 
 NOTE: EMR is a service that costs money, so, always use this service with caution by monitoring your own expenses.  The authors of this tutorial/software are not responsible for any expenses/damages incurred on your AWS account.  Use at your own risk.
