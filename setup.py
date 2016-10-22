@@ -21,11 +21,11 @@ setup(
     license='Apache Software License v2',
     url='https://github.com/qadium-memex/CommonCrawlJob',
     author_email='sang@qadium.com',
+    version='0.1.0',
     packages=find_packages(exclude=['*tests']),
     include_package_data=True,
     use_2to3=True,
     zip_safe=True,
-    use_scm_version=True,
     setup_requires=[
         'setuptools_scm',
         "flake8",

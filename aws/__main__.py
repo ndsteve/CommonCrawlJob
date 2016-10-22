@@ -6,7 +6,7 @@ from argparse import ArgumentParser
 from . import S3Remote
 
 
-def command_line():
+def command_line(remote):
 
     prog = 'crawl_index'
     description = 'Helper tool to run MapReduce jobs over Common Crawl'
@@ -21,7 +21,7 @@ def command_line():
     # Preparse Date Codes
     crawl, _ = crawl_list.parse_known_args()
     if crawl.list:
-        print_buckets()
+        remote.print_buckets()
         exit(0)
 
     parser = ArgumentParser(
@@ -53,7 +53,7 @@ def command_line():
 
 def main():
     remote = S3Remote()
-    args = command_line()
+    args = command_line(remote)
     crawl = remote.select_crawl() if args.date == 'latest' else remote.select_crawl(args.date)
     fp = open(args.file, 'wt') if args.file else sys.stdout
     idx = remote.get_index(crawl)
