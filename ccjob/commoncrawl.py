@@ -71,7 +71,7 @@ class CommonCrawl(MRJob):
             return unicode()
 
     def read_warc(self, key):
-        keypath = 's3://aws-publicdatasets/{key}'.format(key=key)
+        keypath = 's3://commoncrawl/{key}'.format(key=key)
         with self.s3.open(keypath, 'rb') as fp:
             warcfile = WARCFile(fileobj=fp, compress='gzip')
             for record in warcfile.reader:
