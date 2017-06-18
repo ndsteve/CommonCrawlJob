@@ -6,7 +6,6 @@ from mrjob.job import MRJob
 from warc import WARCFile
 from six.moves.urllib.request import url2pathname
 from s3fs import S3FileSystem
-from urlparse import urlparse
 
 
 from . structures import CaseInsensitiveDict
