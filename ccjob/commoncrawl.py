@@ -93,6 +93,6 @@ class CommonCrawl(MRJob):
                 yield match.groups()[0]
 
     def reducer(self, url, values):
-        domain = '{uri.netloc}'.format(uri=url[0])
+        domain = 'test'
         yield (url[0], domain, url[1])
 
