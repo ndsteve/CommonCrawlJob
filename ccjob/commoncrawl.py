@@ -50,7 +50,7 @@ class CommonCrawl(MRJob):
             help='Regex pattern input as a command line argument',
         )
     def mapper_init(self):
-        self.pattern = re.compile(self.options.pattern)
+        self.pattern = self.options.pattern
 
     @staticmethod
     def split_headers(head):
