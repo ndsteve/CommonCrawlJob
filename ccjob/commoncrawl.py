@@ -87,9 +87,8 @@ class CommonCrawl(MRJob):
                 yield ((url2pathname(record.url), value), 1)
 
     def process_record(self, body):
-        for match in self.pattern.finditer(body):
-            if match:
-                yield match.groups()[0]
+        if "cdn.optimizely.com" in body:
+            yield "yes"
 
     def reducer(self, url, values):
         yield (url[0], url[1])
