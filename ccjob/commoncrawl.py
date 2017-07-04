@@ -93,7 +93,7 @@ class CommonCrawl(MRJob):
                 start = 0
             end = start + len(self.pattern)
             end = end + 50
-            yield body[start:end]
+            yield str(start)+" "+str(len(self.pattern))+" "+str(end)
 
     def reducer(self, url, values):
         yield (url[0], url[1])
