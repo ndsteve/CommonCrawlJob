@@ -87,8 +87,8 @@ class CommonCrawl(MRJob):
                 yield ((url2pathname(record.url), value), 1)
 
     def process_record(self, body):
-        if self.pattern in body:
-            start = body.index(self.pattern) - 50
+        if self.pattern.lower() in body.lower():
+            start = body.lower().index(self.pattern.lower()) - 50
             if (start < 50):
                 start = 0
             end = start + 50 + len(self.pattern) + 50
