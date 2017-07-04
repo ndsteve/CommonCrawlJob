@@ -88,11 +88,11 @@ class CommonCrawl(MRJob):
 
     def process_record(self, body):
         if self.pattern in body:
-            start = body.index(self.pattern)
+            start = body.index(self.pattern) - 50
             if (start < 50):
                 start = 0
             end = len(self.pattern) + 50
-            yield body[start:end]
+            yield str(start)+" "+str(end)
 
     def reducer(self, url, values):
         yield (url[0], url[1])
