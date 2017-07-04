@@ -91,8 +91,7 @@ class CommonCrawl(MRJob):
             start = body.index(self.pattern) - 50
             if (start < 50):
                 start = 0
-            end = start + len(self.pattern)
-            end = end + 50
+            end = start + 50 + len(self.pattern) + 50
             yield body[start:end]
 
     def reducer(self, url, values):
