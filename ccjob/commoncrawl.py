@@ -6,8 +6,6 @@ from mrjob.job import MRJob
 from warc import WARCFile
 from six.moves.urllib.request import url2pathname
 from s3fs import S3FileSystem
-from gzipstream import GzipStreamFile
-
 
 from . structures import CaseInsensitiveDict
 
@@ -75,7 +73,7 @@ class CommonCrawl(MRJob):
     def read_warc(self, key):
         keypath = 's3://commoncrawl/{key}'.format(key=key)
         with self.s3.open(keypath, 'rb') as fp:
-            warcfile = WARCFile(fileobj=GzipStreamFile(fp))
+            warcfile = WARCFile(fileobj=fp, compress='gzip')
             for record in warcfile.reader:
                 if record.type == 'response':
                     self.increment_counter(self.__class__.__name__, 'match', 1)
