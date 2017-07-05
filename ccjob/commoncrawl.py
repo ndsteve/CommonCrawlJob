@@ -62,7 +62,7 @@ class CommonCrawl(MRJob):
     def get_payload(self, record):
         payload = record.payload.read()
         head, _, tail = payload.partition('\r\n\r\n')
-        return tail.encode('utf8', 'replace')
+        return tail.encode('utf-8', 'ignore').decode('utf-8')
         #content_type = self.split_headers(head).get('content-type', '').lower()
         #if 'latin-1' or 'iso-8859-1' in content_type:
         #    tail = tail.decode('latin-1').encode('utf-8')
