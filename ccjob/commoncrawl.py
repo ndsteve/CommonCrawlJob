@@ -62,13 +62,14 @@ class CommonCrawl(MRJob):
     def get_payload(self, record):
         payload = record.payload.read()
         head, _, tail = payload.partition('\r\n\r\n')
-        content_type = self.split_headers(head).get('content-type', '').lower()
-        if 'latin-1' or 'iso-8859-1' in content_type:
-            tail = tail.decode('latin-1').encode('utf-8')
-        try:
-            return tail.decode('utf-8')
-        except UnicodeDecodeError:
-            return unicode()
+        return tail
+        #content_type = self.split_headers(head).get('content-type', '').lower()
+        #if 'latin-1' or 'iso-8859-1' in content_type:
+        #    tail = tail.decode('latin-1').encode('utf-8')
+        #try:
+        #    return tail.decode('utf-8')
+        #except UnicodeDecodeError:
+        #    return unicode()
 
     def read_warc(self, key):
         keypath = 's3://commoncrawl/{key}'.format(key=key)
@@ -87,12 +88,12 @@ class CommonCrawl(MRJob):
 
     def process_record(self, body):
         yield "yes"
-        #if self.pattern.lower() in body.lower():
-         #   start = body.lower().index(self.pattern.lower()) - 50
-          #  if (start < 50):
-           #     start = 0
-            #end = start + 50 + len(self.pattern) + 50
-            #yield body[start:end]
+        if self.pattern.lower() in body.lower():
+            start = body.lower().index(self.pattern.lower()) - 50
+            if (start < 50):
+                start = 0
+            end = start + 50 + len(self.pattern) + 50
+            yield body[start:end]
 
     def reducer(self, url, values):
         yield (url[0], url[1])
