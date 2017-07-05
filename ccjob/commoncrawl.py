@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from __future__ import print_function
 
 import re
@@ -63,7 +62,7 @@ class CommonCrawl(MRJob):
     def get_payload(self, record):
         payload = record.payload.read()
         head, _, tail = payload.partition('\r\n\r\n')
-        return tail
+        return tail.encode('utf8', 'replace')
         #content_type = self.split_headers(head).get('content-type', '').lower()
         #if 'latin-1' or 'iso-8859-1' in content_type:
         #    tail = tail.decode('latin-1').encode('utf-8')
