@@ -73,7 +73,7 @@ class CommonCrawl(MRJob):
     def read_warc(self, key):
         keypath = 's3://commoncrawl/{key}'.format(key=key)
         with self.s3.open(keypath, 'rb') as fp:
-            warcfile = WARCFile(fileobj=fp, compress='gzip)
+            warcfile = WARCFile(fileobj=fp, compress='gzip')
             for record in warcfile.reader:
                 if record.type == 'response':
                     self.increment_counter(self.__class__.__name__, 'match', 1)
@@ -86,12 +86,13 @@ class CommonCrawl(MRJob):
                 yield ((url2pathname(record.url), value), 1)
 
     def process_record(self, body):
-        if self.pattern.lower() in body.lower():
-            start = body.lower().index(self.pattern.lower()) - 50
-            if (start < 50):
-                start = 0
-            end = start + 50 + len(self.pattern) + 50
-            yield body[start:end]
+        yield "yes"
+        #if self.pattern.lower() in body.lower():
+        #    start = body.lower().index(self.pattern.lower()) - 50
+        #    if (start < 50):
+        #        start = 0
+        #    end = start + 50 + len(self.pattern) + 50
+        #    yield body[start:end]
 
     def reducer(self, url, values):
         yield (url[0], url[1])
